@@ -1,61 +1,89 @@
-console.log('App.js running');
-
-const app = {
-	title: 'Indecision App',
-	subtitle: 'Can\'t decide what to do?',
-	options: ['One', 'Two']
-};
-
-function subtitle(subtitle) {
-	return subtitle && <p>{subtitle}</p>
+class IndecisionApp extends React.Component {
+    render() {
+        const title = 'Indecision';
+        const subtitle = 'Put your life in the hands of a computer';
+        const options = ['One', 'Two', 'Three'];
+        return (
+            <div>
+                <Header title={title} subtitle={subtitle}/>
+                <Action />
+                <Options options={options}/>
+                <AddOption />
+            </div>
+        );
+    }
 }
 
-function options(options) {
-	return (options && options.length > 0) ? 'Here are your options' : 'No Options'
+class Header extends React.Component {
+    render() {
+        return (
+            <div>
+                <h1>{this.props.title}</h1>
+                <h2>{this.props.subtitle}</h2>
+            </div>
+        );
+    }
 }
 
-const template = (
-	<div>
-		<h1>{app.title}</h1>
-		{subtitle(app.subtitle)}
-		<p>{options(app.options)}</p>
-		<ol>
-			<li>Item One</li>
-			<li>Item Two</li>
-		</ol>
-	</div>
-);
-
-const user = {
-	name: 'Joe',
-	age: 25,
-	location: 'London'
-};
-
-function getName(name) {
-	return <h1>{name ? name : 'Anonymous'}</h1>
+class Action extends React.Component {
+    handlePick() {
+        alert('handlePick');
+    }
+    render() {
+        return (
+            <div>
+                <button onClick={this.handlePick}>What should I do?</button>
+            </div>
+        );
+    }
 }
 
-function getAge(age) {
-	return (age && age >= 18) && <p>Age: {age}</p>
+class Options extends React.Component {
+    handleRemoveAll() {
+        alert('handleRemoveAll');
+    }
+    render() {
+        return (
+            <div>
+                <button onClick={this.handleRemoveAll}>Remove All Options</button>
+                {
+                    this.props.options.map((option) => <Option key={option} optionText={option}/>)
+                }
+            </div>
+        );
+    }
 }
 
-function getLocation(location) {
-	if (location) {
-		return <p>Location: {location}</p>;
-	}
+class Option extends React.Component {
+    render() {
+        return (
+            <div>
+                {this.props.optionText}
+            </div>
+        );
+    }
 }
 
-const personalInfo = (
-	<div>
-		{getName(user.name)}
-		{getAge(user.age)}
-		{getLocation(user.location)}
-	</div>
-);
+class AddOption extends React.Component {
+    handleAddOption(e) {
+		e.preventDefault()
+		
+		const optionInput = e.target.elements.option.value.trim();
+		
+        if (optionInput) {
+            alert(optionInput)
+        }
+    }
+    render() {
+        return (
+            <div>
+                <form onSubmit={this.handleAddOption}>
+                    <input type="text" name="option"/>
+                    <button>Add Option</button>
+                </form>
+            </div>
+        );
+    }
+}
 
-var appRoot = document.getElementById('app');
-var personalRoot = document.getElementById('personal-info');
-
-ReactDOM.render(template, appRoot);
-ReactDOM.render(personalInfo, personalRoot);
+ReactDOM.render(<IndecisionApp />, document.getElementById('app'))
